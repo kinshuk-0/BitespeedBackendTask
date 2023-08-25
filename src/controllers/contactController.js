@@ -36,15 +36,17 @@ const identifyContact = (req, res) => __awaiter(void 0, void 0, void 0, function
 exports.identifyContact = identifyContact;
 function inflateContactDto(primaryContact, secondaryContacts) {
     const primaryContatctId = primaryContact.dataValues.id;
-    const emails = [];
-    const phoneNumbers = [];
     const secondaryContactIds = [];
-    emails.push(primaryContact.dataValues.email);
-    phoneNumbers.push(primaryContact.dataValues.phoneNumber);
+    const emailsSet = new Set();
+    const phoneNumbersSet = new Set();
+    emailsSet.add(primaryContact.dataValues.email);
+    phoneNumbersSet.add(primaryContact.dataValues.phoneNumber);
     secondaryContacts.forEach(element => {
-        emails.push(element.dataValues.email);
-        phoneNumbers.push(element.dataValues.phoneNumber);
+        emailsSet.add(element.dataValues.email);
+        phoneNumbersSet.add(element.dataValues.phoneNumber);
         secondaryContactIds.push(element.dataValues.id);
     });
+    const emails = Array.from(emailsSet);
+    const phoneNumbers = Array.from(phoneNumbersSet);
     return { primaryContatctId, emails, phoneNumbers, secondaryContactIds };
 }
