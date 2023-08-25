@@ -108,7 +108,7 @@ const getSecondaryContacts = (email, phoneNumber) => __awaiter(void 0, void 0, v
         where: { email: email, linkPrecedence: 'secondary' }
     });
     const fromPhone = yield contact_1.default.findAll({
-        where: { email: phoneNumber, linkPrecedence: 'secondary' }
+        where: { phoneNumber: phoneNumber, linkPrecedence: 'secondary' }
     });
     return fromEmail.concat(fromPhone);
 });
