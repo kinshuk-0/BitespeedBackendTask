@@ -2,7 +2,7 @@
 
 import { Sequelize } from 'sequelize'
 
-const sequelize = new Sequelize('bitespeed_identity_reconciliation', 'your_username', 'your_password', {
+const sequelize = new Sequelize('bitespeed_identity_reconciliation', 'root', 'root@123', {
   host    : 'localhost',
   dialect : 'mysql',
   port    :  33061

@@ -26,6 +26,7 @@ const createOrUpdateContact = (email, phoneNumber) => __awaiter(void 0, void 0, 
         if (existingContactWithEmail.dataValues.id !== existingContactWithPhone.dataValues.id) {
             updateToSecondary(existingContactWithPhone.dataValues.id, existingContactWithEmail.dataValues.id);
         }
+        return yield findByEmailOrPhone(email, null);
     }
     else if (existingContactWithEmail) {
         existingContact = existingContactWithEmail;

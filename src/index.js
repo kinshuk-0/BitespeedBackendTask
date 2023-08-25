@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const contactRoutes_1 = __importDefault(require("./routes/contactRoutes"));
 const app = (0, express_1.default)();
-const port = 8082;
+const port = 8099;
 app.use(express_1.default.json());
 app.use('/', contactRoutes_1.default);
 app.listen(port, () => {

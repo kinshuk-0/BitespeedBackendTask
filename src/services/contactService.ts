@@ -19,6 +19,8 @@ const createOrUpdateContact = async (email: string | null, phoneNumber: string |
         if(existingContactWithEmail.dataValues.id !== existingContactWithPhone.dataValues.id) {
             updateToSecondary(existingContactWithPhone.dataValues.id, existingContactWithEmail.dataValues.id)
         }
+
+        return await findByEmailOrPhone(email, null)
     } else if(existingContactWithEmail) {
         existingContact = existingContactWithEmail
     } else if(existingContactWithPhone){
