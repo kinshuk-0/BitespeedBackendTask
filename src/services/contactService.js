@@ -24,7 +24,7 @@ const createOrUpdateContact = (email, phoneNumber) => __awaiter(void 0, void 0, 
     }
     if (existingContactWithEmail && existingContactWithPhone) {
         if (existingContactWithEmail.dataValues.id !== existingContactWithPhone.dataValues.id) {
-            // change primary to secondary
+            updateToSecondary(existingContactWithPhone.dataValues.id, existingContactWithEmail.dataValues.id);
         }
     }
     else if (existingContactWithEmail) {
@@ -79,5 +79,12 @@ const createSecondaryContact = (primaryContactId, existingContactInfo, value, ty
         linkPrecedence: 'secondary',
     });
 });
-const updateToSecondary = (contactId) => __awaiter(void 0, void 0, void 0, function* () {
+const updateToSecondary = (id, linkedId) => __awaiter(void 0, void 0, void 0, function* () {
+    contact_1.default.update({
+        linkedId: linkedId,
+        linkPrecedence: 'secondary',
+        modifiedAt: new Date()
+    }, {
+        where: { id: id, linkPrecedence: 'primary' }
+    });
 });

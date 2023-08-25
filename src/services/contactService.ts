@@ -17,7 +17,7 @@ const createOrUpdateContact = async (email: string | null, phoneNumber: string |
 
     if(existingContactWithEmail && existingContactWithPhone) {
         if(existingContactWithEmail.dataValues.id !== existingContactWithPhone.dataValues.id) {
-            // change primary to secondary
+            updateToSecondary(existingContactWithPhone.dataValues.id, existingContactWithEmail.dataValues.id)
         }
     } else if(existingContactWithEmail) {
         existingContact = existingContactWithEmail
@@ -78,8 +78,15 @@ const createSecondaryContact = async (primaryContactId: number, existingContactI
     })
 }
 
-const updateToSecondary = async (contactId: number) => {
-
+const updateToSecondary = async (id: number, linkedId: number) => {
+    Contact.update({
+        linkedId        : linkedId,
+        linkPrecedence  : 'secondary',
+        modifiedAt      : new Date()
+    }, 
+    {
+        where: {id: id, linkPrecedence: 'primary'}
+    })
 }
   
 export { createOrUpdateContact }
