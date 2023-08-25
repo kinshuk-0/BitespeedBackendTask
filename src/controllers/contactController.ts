@@ -35,7 +35,7 @@ export const identifyContact = async (req: Request, res: Response) => {
 
 function inflateContactDto(primaryContact: Model<any, any>, secondaryContacts: Model<any, any>[]): ContactDto {
     const primaryContactId   : number   = primaryContact.dataValues.id,
-          secondaryContactIds: number[] = [],
+          secondaryContactIdsSet        = new Set<number>(),
           emailsSet                     = new Set<string>(),
           phoneNumbersSet               = new Set<string>()
 
@@ -45,11 +45,12 @@ function inflateContactDto(primaryContact: Model<any, any>, secondaryContacts: M
     secondaryContacts.forEach(element => {
         emailsSet.add(element.dataValues.email)
         phoneNumbersSet.add(element.dataValues.phoneNumber)
-        secondaryContactIds.push(element.dataValues.id)
+        secondaryContactIdsSet.add(element.dataValues.id)
     });
 
-    const emails       : string[] = Array.from(emailsSet),
-          phoneNumbers : string[] = Array.from(phoneNumbersSet)
+    const emails              : string[] = Array.from(emailsSet),
+          phoneNumbers        : string[] = Array.from(phoneNumbersSet),
+          secondaryContactIds : number[] = Array.from(secondaryContactIdsSet)
 
     return {primaryContactId, emails, phoneNumbers, secondaryContactIds} 
 }
