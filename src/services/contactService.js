@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createOrUpdateContact = void 0;
+exports.getSecondaryContacts = exports.getPrimaryContact = exports.createOrUpdateContact = void 0;
 const contact_1 = __importDefault(require("../models/contact"));
 const createOrUpdateContact = (email, phoneNumber) => __awaiter(void 0, void 0, void 0, function* () {
     let existingContactWithEmail, existingContactWithPhone, existingContact;
@@ -89,3 +89,27 @@ const updateToSecondary = (id, linkedId) => __awaiter(void 0, void 0, void 0, fu
         where: { id: id, linkPrecedence: 'primary' }
     });
 });
+const getPrimaryContact = (email, phoneNumber) => __awaiter(void 0, void 0, void 0, function* () {
+    const whereClause = {};
+    if (email) {
+        whereClause.email = email;
+    }
+    else if (phoneNumber) {
+        whereClause.phoneNumber = phoneNumber;
+    }
+    whereClause.linkPrecedence = 'primary';
+    return contact_1.default.findOne({
+        where: whereClause
+    });
+});
+exports.getPrimaryContact = getPrimaryContact;
+const getSecondaryContacts = (email, phoneNumber) => __awaiter(void 0, void 0, void 0, function* () {
+    const fromEmail = yield contact_1.default.findAll({
+        where: { email: email, linkPrecedence: 'secondary' }
+    });
+    const fromPhone = yield contact_1.default.findAll({
+        where: { email: phoneNumber, linkPrecedence: 'secondary' }
+    });
+    return fromEmail.concat(fromPhone);
+});
+exports.getSecondaryContacts = getSecondaryContacts;

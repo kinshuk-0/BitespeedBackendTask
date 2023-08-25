@@ -1,5 +1,6 @@
 'use strict'
 
+import { Op } from 'sequelize'
 import Contact from '../models/contact'
 
 const createOrUpdateContact = async (email: string | null, phoneNumber: string | null) => {
@@ -90,5 +91,32 @@ const updateToSecondary = async (id: number, linkedId: number) => {
         where: {id: id, linkPrecedence: 'primary'}
     })
 }
+
+const getPrimaryContact = async (email: string | null, phoneNumber: string | null) => {
+    const whereClause: any = {}
+    if (email) {
+        whereClause.email = email
+    } else if (phoneNumber) {
+        whereClause.phoneNumber = phoneNumber
+    }
+    
+    whereClause.linkPrecedence = 'primary'
+
+    return Contact.findOne({
+        where: whereClause
+    })
+}
+
+const getSecondaryContacts = async (email: string | null, phoneNumber: string | null) => {    
+    const fromEmail = await Contact.findAll({
+        where: {email: email, linkPrecedence: 'secondary'}
+    })
+
+    const fromPhone = await Contact.findAll({
+        where: {email: phoneNumber, linkPrecedence: 'secondary'}
+    })
+
+    return fromEmail.concat(fromPhone)
+}
   
-export { createOrUpdateContact }
+export { createOrUpdateContact, getPrimaryContact, getSecondaryContacts }

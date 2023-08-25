@@ -18,17 +18,14 @@ const identifyContact = (req, res) => __awaiter(void 0, void 0, void 0, function
             res.status(400).json({ 'message': 'bad request' });
         }
         else {
-            const whereClause = {};
-            if (email) {
-                whereClause.email = email;
+            const contactData = yield (0, contactService_1.createOrUpdateContact)(email, phoneNumber);
+            let primaryContact, secondaryContacts;
+            if (contactData) {
+                primaryContact = yield (0, contactService_1.getPrimaryContact)(email, phoneNumber);
+                secondaryContacts = yield (0, contactService_1.getSecondaryContacts)(email, phoneNumber);
             }
-            else if (phoneNumber) {
-                whereClause.phoneNumber = phoneNumber;
-            }
-            whereClause.linkPrecedence = 'primary';
-            console.log(whereClause);
-            const contact = (0, contactService_1.createOrUpdateContact)(email, phoneNumber);
-            res.status(200).json({ 'contactData': 'success' });
+            const contact = inflateContactDto(primaryContact, secondaryContacts);
+            res.status(200).json({ contact });
         }
     }
     catch (error) {
@@ -37,3 +34,17 @@ const identifyContact = (req, res) => __awaiter(void 0, void 0, void 0, function
     }
 });
 exports.identifyContact = identifyContact;
+function inflateContactDto(primaryContact, secondaryContacts) {
+    const primaryContatctId = primaryContact.dataValues.id;
+    const emails = [];
+    const phoneNumbers = [];
+    const secondaryContactIds = [];
+    emails.push(primaryContact.dataValues.email);
+    phoneNumbers.push(primaryContact.dataValues.phoneNumber);
+    secondaryContacts.forEach(element => {
+        emails.push(element.dataValues.email);
+        phoneNumbers.push(element.dataValues.phoneNumber);
+        secondaryContactIds.push(element.dataValues.id);
+    });
+    return { primaryContatctId, emails, phoneNumbers, secondaryContactIds };
+}
