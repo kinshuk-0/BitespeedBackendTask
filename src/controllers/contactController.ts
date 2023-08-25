@@ -4,6 +4,7 @@ import { Request, Response } from 'express'
 import { createOrUpdateContact, getPrimaryContact, getSecondaryContacts } from '../services/contactService'
 import { Model } from 'sequelize'
 import { ContactDto } from '../dto/contactDto'
+
 export const identifyContact = async (req: Request, res: Response) => {
   try {
     const { email, phoneNumber } = req.body
@@ -33,12 +34,10 @@ export const identifyContact = async (req: Request, res: Response) => {
 }
 
 function inflateContactDto(primaryContact: Model<any, any>, secondaryContacts: Model<any, any>[]): ContactDto {
-    const primaryContatctId: number = primaryContact.dataValues.id
-
-    const secondaryContactIds: number[] = []
-
-    const emailsSet       = new Set<string>()
-    const phoneNumbersSet = new Set<string>()
+    const primaryContactId   : number   = primaryContact.dataValues.id,
+          secondaryContactIds: number[] = [],
+          emailsSet                     = new Set<string>(),
+          phoneNumbersSet               = new Set<string>()
 
     emailsSet.add(primaryContact.dataValues.email)
     phoneNumbersSet.add(primaryContact.dataValues.phoneNumber)
@@ -49,8 +48,8 @@ function inflateContactDto(primaryContact: Model<any, any>, secondaryContacts: M
         secondaryContactIds.push(element.dataValues.id)
     });
 
-    const emails             : string[] = Array.from(emailsSet)
-    const phoneNumbers       : string[] = Array.from(phoneNumbersSet)
+    const emails       : string[] = Array.from(emailsSet),
+          phoneNumbers : string[] = Array.from(phoneNumbersSet)
 
-    return {primaryContatctId, emails, phoneNumbers, secondaryContactIds} 
+    return {primaryContactId, emails, phoneNumbers, secondaryContactIds} 
 }

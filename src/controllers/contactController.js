@@ -35,7 +35,7 @@ const identifyContact = (req, res) => __awaiter(void 0, void 0, void 0, function
 });
 exports.identifyContact = identifyContact;
 function inflateContactDto(primaryContact, secondaryContacts) {
-    const primaryContatctId = primaryContact.dataValues.id;
+    const primarycontactId = primaryContact.dataValues.id;
     const secondaryContactIds = [];
     const emailsSet = new Set();
     const phoneNumbersSet = new Set();
@@ -48,5 +48,5 @@ function inflateContactDto(primaryContact, secondaryContacts) {
     });
     const emails = Array.from(emailsSet);
     const phoneNumbers = Array.from(phoneNumbersSet);
-    return { primaryContatctId, emails, phoneNumbers, secondaryContactIds };
+    return { primarycontactId, emails, phoneNumbers, secondaryContactIds };
 }

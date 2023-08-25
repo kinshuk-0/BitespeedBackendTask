@@ -1,6 +1,6 @@
 'use strict'
 
-import { DataTypes, Model } from 'sequelize'
+import { DataTypes } from 'sequelize'
 import sequelize from '../database/db'
 
 const Contact = sequelize.define('contact',{

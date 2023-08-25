@@ -1,6 +1,6 @@
 export interface ContactDto {
 
-    primaryContatctId  : number
+    primaryContactId   : number
     emails             : string[]
     phoneNumbers       : string[]
     secondaryContactIds: number[]
